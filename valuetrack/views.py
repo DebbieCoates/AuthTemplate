@@ -12,6 +12,26 @@ def home(request):
     return render(request, 'home.html')
 
 
+# View Customers
+def Customers(request):
+	customers = Customer.objects.all()
+	return render(request, 'customers.html', {'customers': customers})
+
+def customer(request, pk):
+	customer = get_object_or_404(Customer, pk=pk)
+	return render(request, 'customer.html', {'customer': customer})
+
+def customer_add(request, pk):
+	pass
+
+def customer_delete(request, pk):
+	pass
+
+def customer_edit(request, pk):
+	pass
+
+################################################# Authoristion ###################################################################################
+
 # Update User Info
 def update_user(request):
 	if request.user.is_authenticated:
