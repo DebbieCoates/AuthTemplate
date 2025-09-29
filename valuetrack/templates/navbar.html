@@ -1,0 +1,55 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg bg-white">
+  <div class="container-fluid">
+    
+    <a class="navbar-brand" href="#">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <img src="{% static 'images/HayleyDexisLogo.png' %}" class="img-fluid" width="300" height="100"" alt="ValueTrack Logo">
+      &nbsp; ValueTrack &nbsp;
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarText">
+
+          <!-- Left-side auth links -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+          </ul>
+
+          <!-- Right-side auth links -->
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+            <span class="navbar-text" style="color: blue; font-weight: bold; margin-right: 15px;">
+              {% if user.is_authenticated %}
+                you are logged in as {{ user.username }}
+              {% else %}
+                Guest
+              {% endif %}
+            </span>
+
+
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'update_user' %}">User</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}">Register</a>
+              </li>
+            {% endif %} 
+        </ul>
+    </div>
+  </div>
+</nav>
