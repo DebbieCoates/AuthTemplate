@@ -6,8 +6,41 @@
     {% block content %}
     customer.html
 
+    </br></br>
+    <h1>{{ customer.name }}</h1>
+    </br>
+    <p><strong>Main Contact:</strong> {{ customer.main_contact }}</p>
+    <p><strong>Hayley Account Manager:</strong> {{ customer.hayley_account_manager }}</p>
 
-    <h1>Welcome to the Customer Page</h1>
+    <br>
+        <p><strong>Address :</strong> {{ customer.address }}</p>
+        <p><strong>Address :</strong> {{ customer.address2 }}</p>
+        <p><strong>City :</strong> {{ customer.city }}</p>
+        <p><strong>County :</strong> {{ customer.county }}</p>
+        <p><strong>Postcode :</strong> {{ customer.postcode }}</p>
+        <p><strong>Country :</strong> {{ customer.country }}</p>
+        <br>
+        <p><strong>Phone Number :</strong> {{ customer.phone_number }}</p>
+        <p><strong>Email :</strong> {{ customer.email }}</p>
+        <p><strong>Notes :</strong> {{ customer.notes }}</p>
+        <p><strong>Website :</strong>
+            <a href="{{ customer.website }}" target="_blank" rel="noopener noreferrer">
+                {{ customer.website }}
+            </a>
+        </p>
+        <br>
+        <p><strong>Industry :</strong> {{ customer.industry }}</p>  
+        <p><strong>Sector :</strong> {{ customer.sector }}</p>  
 
+        <p><strong>Location :</strong> {{ customer.location }}</p>  
+        
+
+    </br>
+
+    <a href="{% url 'customer_edit' customer.id %}" class="btn btn-primary">Edit Customer</a>
+    <a href="{% url 'customer_delete' customer.id %}" class="btn btn-danger">Delete Customer</a>
+    
+    </br> </br>
+    <a href="{% url 'customers' %}">Back</a>
 
     {% endblock %}

@@ -19,17 +19,25 @@ location_CHOICES = [
     ]
 
 Industry_CHOICES = [
-        ('Tech', 'Technology'), 
+        ('Technology', 'Technology'), 
         ('Finance', 'Finance'), 
-        ('Health', 'Healthcare'), 
-        ('Edu', 'Education'), 
+        ('Healthcare', 'Healthcare'), 
+        ('Education', 'Education'), 
         ('Retail', 'Retail'),
-        ('Eng', 'Engineering'),
-        ('Auto', 'Automotive'),
-        ('Food', 'Food & Beverage'),
-        ('Media', 'Media & Entertainment'),
-        ('Con', 'Construction'),
-        ('Manu', 'Manufacturing'),
+        ('Engineering', 'Engineering'),
+        ('Automotive', 'Automotive'),
+        ('Food & Beverage', 'Food & Beverage'),
+        ('Media & Entertainment', 'Media & Entertainment'),
+        ('Construction', 'Construction'),
+        ('Manufacturing', 'Manufacturing'),
+        ('Food & Beverage', 'Food & Beverage'),
+        ('Telecommunications', 'Telecommunications'),
+        ('Education', 'Education'),
+        ('Hospitality', 'Hospitality'),
+        ('Real Estate', 'Real Estate'),
+        ('Transportation & Logistics', 'Transportation & Logistics'),
+        ('Energy & Utilities', 'Energy & Utilities'),
+        ('Non-Profit', 'Non-Profit'),
         ('Other', 'Other')
     ]
 
@@ -64,3 +72,19 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.name
+
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+    
+class Service(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name='services')
+    def __str__(self):
+        return self.name
+
+

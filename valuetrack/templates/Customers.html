@@ -9,7 +9,7 @@
     <h1>Customers</h1>
     </br> 
     <div class="mt-4">
-        <a href="" >Add Customer</a>
+        <a href="{% url 'customer_add' %}" >Add Customer</a>
     </div>
 
     <table class="table table table-striped table-hover table-bordered" style="margin-top: 20px" >
@@ -24,12 +24,12 @@
         <tbody>
             {% for customer in customers %}
             <tr>
-                <td><a href="" >{{ customer.name }}</a></td>
+                <td><a href="{% url 'customer' customer.id %}" >{{ customer.name }}</a></td>
                 <td>{{ customer.main_contact }}</td>
                 <td>{{ customer.hayley_account_manager }}</td>
                 <td>
-                    <a href="" >Edit</a> &nbsp; | &nbsp;
-                    <a href="" >Delete</a>
+                    <a href="{% url 'customer_edit' customer.id %}" >Edit</a> &nbsp; | &nbsp;
+                    <a href="{% url 'customer_delete' customer.id %}" >Delete</a>
             </tr>
             {% endfor %}
         </tbody>

@@ -1,36 +1,71 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Customer
+from .models import Customer 
 from django.contrib import messages
-from .forms import  SignUpForm,  UpdateUserForm, ChangePasswordForm
+from .forms import  SignUpForm,  UpdateUserForm, ChangePasswordForm, UpdateCustomer
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
 
-
+################################################# Customers
 # View Customers
+@login_required
 def Customers(request):
 	customers = Customer.objects.all()
 	return render(request, 'customers.html', {'customers': customers})
 
+# View Single Customer
+@login_required
 def customer(request, pk):
 	customer = get_object_or_404(Customer, pk=pk)
 	return render(request, 'customer.html', {'customer': customer})
 
-def customer_add(request, pk):
-	pass
+# Add Customer
+@login_required
+def customer_add(request):
+    if request.method == 'POST':
+        form = UpdateCustomer(request.POST, request.FILES or None)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'New customer added successfully.')
+            return redirect('customers')
+    else:
+        form = UpdateCustomer()
+    return render(request, 'customer_add.html', {'form': form})
 
+# Delete Customer
+@login_required
 def customer_delete(request, pk):
-	pass
+    # get the contact to be deleted
+    customer = Customer.objects.get(id=pk)
+    # delete the contact
+    customer.delete()
+    # display a success message
+    messages.success(request, f'{customer.name} deleted successfully.')
+    # redirect to the customer list page
+    return redirect('customers')
 
+# Edit Customer
+@login_required
 def customer_edit(request, pk):
-	pass
+    # Get the customer to be edited
+    customer = Customer.objects.get(id=pk)
+    # Pre-fill the form with the existing customer data
+    form = UpdateCustomer(instance=customer)
+    if request.method == 'POST':
+        form = UpdateCustomer(request.POST, request.FILES or None, instance=customer)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Customer {customer.name} updated successfully.')
+            return redirect('customers')
+    return render(request, 'customer_edit.html', {'customer': customer, 'form': form})
+    
 
-################################################# Authoristion ###################################################################################
+################################################# Authoristion 
 
 # Update User Info
 def update_user(request):

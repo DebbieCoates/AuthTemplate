@@ -4,6 +4,34 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPassw
 from django.contrib.auth.models import User
 
 
+
+
+# Form to Update Customer Details
+class UpdateCustomer(forms.ModelForm):
+    
+	name = forms.CharField(label='Name', widget=forms.TextInput(attrs={'placeholder': 'Customer Name', 'class': 'form-control'}), max_length=200, required=False)
+	main_contact = forms.CharField(label='Main Contact', widget=forms.TextInput(attrs={'placeholder': 'Main Contact Name', 'class': 'form-control'}), max_length=200, required=False)
+	address1 = forms.CharField(label='Address Line 1', widget=forms.TextInput(attrs={'placeholder': 'Address Line 1', 'class': 'form-control'}), max_length=200, required=False)
+	address2 = forms.CharField(label='Address Line 2', widget=forms.TextInput(attrs={'placeholder': 'Address Line 2', 'class': 'form-control'}), max_length=200, required=False)
+	city = forms.CharField(label='City', widget=forms.TextInput(attrs={'placeholder': 'City', 'class': 'form-control'}), max_length=100, required=False)
+	postcode = forms.CharField(label='Postcode', widget=forms.TextInput(attrs={'placeholder': 'Postcode', 'class': 'form-control'}), max_length=20, required=False)
+	county = forms.CharField(label='County', widget=forms.TextInput(attrs={'placeholder': 'County', 'class': 'form-control'}), max_length=100, required=False)
+	country = forms.CharField(label='Country', widget=forms.TextInput(attrs={'placeholder': 'Country', 'class': 'form-control'}), max_length=100, required=False, initial='United Kingdom')
+	email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'placeholder': 'Email Address', 'class': 'form-control'}), max_length=254, required=False)
+	phone = forms.CharField(label='Phone', widget=forms.TextInput(attrs={'placeholder': 'Phone Number', 'class': 'form-control'}), max_length=20, required=False)
+	website = forms.URLField(label='Website', widget=forms.URLInput(attrs={'placeholder': 'Website URL', 'class': 'form-control'}), max_length=200, required=False)
+	industry = forms.ChoiceField(label='Industry', choices=[('', 'Select Industry'), ('Tech', 'Technology'), ('Finance', 'Finance'), ('Health', 'Healthcare'), ('Edu', 'Education'), ('Retail', 'Retail'), ('Eng', 'Engineering'), ('Auto', 'Automotive'), ('Food', 'Food & Beverage'), ('Media', 'Media & Entertainment'), ('Con', 'Construction'), ('Manu', 'Manufacturing'), ('Other', 'Other')], widget=forms.Select(attrs={'class': 'form-control'}), required=False)
+	sector = forms.CharField(label='Sector', widget=forms.TextInput(attrs={'placeholder': 'Sector', 'class': 'form-control'}), max_length=100, required=False)
+	location = forms.ChoiceField(label='Location', choices=[('', 'Select Location'), ('East of England', 'East of England'), ('East Midlands', 'East Midlands'), ('London', 'London'), ('North East', 'North East'), ('North West', 'North West'), ('South East', 'South East'), ('South West', 'South West'), ('West Midlands', 'West Midlands'), ('Yorkshire and the Humber', 'Yorkshire and the Humber'), ('Scotland', 'Scotland'), ('Wales', 'Wales'), ('Northern Ireland', 'Northern Ireland'), ('Other', 'Other')], widget=forms.Select(attrs={'class': 'form-control'}), required=False)
+	hayley_account_manager = forms.CharField(label='Account Manager', widget=forms.TextInput(attrs={'placeholder': 'Account Manager Name', 'class': 'form-control'}), max_length=100, required=False)
+	notes = forms.CharField(label='Notes', widget=forms.Textarea(attrs={'placeholder': 'Additional Notes', 'class': 'form-control', 'rows': 4}), required=False)	
+	archived = forms.BooleanField(label='Archived', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))	
+
+	class Meta:
+		model = Customer
+		fields = ['name', 'main_contact', 'address1', 'address2', 'city', 'postcode', 'county', 'country', 'email', 'phone', 'website', 'industry', 'sector', 'location', 'hayley_account_manager', 'notes', 'archived']	
+  
+  
 # Update User Details
 class UpdateUserForm(UserChangeForm):
 	# Hide Password Stuff
