@@ -2,7 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-location_CHOICES = [
+
+# Create your models here.
+class Customer(models.Model):
+    
+    location_CHOICES = [
         ('East of England', 'East of England'), 
         ('East Midlands', 'East Midlands'), 
         ('London', 'London'), 
@@ -18,7 +22,7 @@ location_CHOICES = [
         ('Other', 'Other')
     ]
 
-Industry_CHOICES = [
+    Industry_CHOICES = [
         ('Technology', 'Technology'), 
         ('Finance', 'Finance'), 
         ('Healthcare', 'Healthcare'), 
@@ -41,8 +45,6 @@ Industry_CHOICES = [
         ('Other', 'Other')
     ]
 
-# Create your models here.
-class Customer(models.Model):
     name = models.CharField(max_length=100)
     main_contact = models.CharField(max_length=100)
     # Address fields
@@ -73,6 +75,37 @@ class Customer(models.Model):
     def __str__(self):
         return self.name
 
+class Problem(models.Model):
+    
+    Urgency_CHOICES = [
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High'),
+        ('Critical', 'Critical')
+    ]  
+    
+    status_CHOICES = [ 
+            ('Open', 'Open'),
+            ('In Progress', 'In Progress'),
+            ('Resolved', 'Resolved'),
+            ('Closed', 'Closed')
+        ]  
+      
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='problem_statements')
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    root_cause = models.TextField(blank=True, null=True)
+    impact = models.TextField(blank=True, null=True)
+    urgency = models.CharField(max_length=50, choices=Urgency_CHOICES, blank=True, null=True, default='Medium')
+    status = models.CharField(max_length=50, choices=status_CHOICES, blank=True, null=True, default='Open')
+    notes = models.TextField(blank=True, null=True) 
+    # ✅ Audit Trail
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.title} - {self.customer.name}" 
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
@@ -87,4 +120,11 @@ class Service(models.Model):
     def __str__(self):
         return self.name
 
+class Solution(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='solutions')
 
+    def __str__(self):
+        return self.name
+ 

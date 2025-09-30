@@ -1,38 +1,47 @@
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import User
-from valuetrack.models import Customer
-from faker import Faker
-import random
+from valuetrack.models import Category, Service, Solution
+import openpyxl
+import os
 
 class Command(BaseCommand):
-    help = 'Seed the database with fake customer data'
+    help = 'Seed Category, Service, and Solution data from Excel file'
 
     def handle(self, *args, **kwargs):
-        fake = Faker()
-        user = User.objects.first()
+        file_path = r'C:\Users\debbi\OneDrive\Documents\Category Service Solution.xlsx'  # Update if needed
 
-        location_choices = [choice[0] for choice in Customer._meta.get_field('location').choices]
-        industry_choices = [choice[0] for choice in Customer._meta.get_field('industry').choices]
+        try:
+            wb = openpyxl.load_workbook(file_path)
+            sheet = wb.active
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f'Error opening file: {e}'))
+            return
 
-        for _ in range(20):
-            customer = Customer.objects.create(
-                name=fake.company(),
-                main_contact=fake.name(),
-                address1=fake.street_address(),
-                address2=fake.secondary_address(),
-                city=fake.city(),
-                postcode=fake.postcode(),
-                county=fake.state(),
-                country="United Kingdom",
-                email=fake.company_email(),
-                phone=fake.phone_number(),
-                website=fake.url(),
-                industry=random.choice(industry_choices),
-                sector=fake.bs().title(),
-                location=random.choice(location_choices),
-                hayley_account_manager=fake.name(),
-                notes=fake.paragraph(nb_sentences=3),
-                archived=False,
+        created_categories = {}
+        created_services = {}
+        count_solutions = 0
 
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            category_name, service_name, solution_name = row[:3]
+
+            if not category_name or not service_name or not solution_name:
+                continue
+
+            # Create or get Category
+            category, _ = Category.objects.get_or_create(name=category_name.strip())
+
+            # Create or get Service linked to Category
+            service, _ = Service.objects.get_or_create(
+                name=service_name.strip(),
+                category=category
             )
-            self.stdout.write(self.style.SUCCESS(f"Created: {customer.name}"))
+
+            # Create Solution linked to Service
+            Solution.objects.create(
+                name=solution_name.strip(),
+                service=service
+            )
+            count_solutions += 1
+
+        self.stdout.write(self.style.SUCCESS(
+            f'Successfully seeded data: {Category.objects.count()} categories, {Service.objects.count()} services, {count_solutions} solutions.'
+        ))

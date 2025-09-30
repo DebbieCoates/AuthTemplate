@@ -1,47 +1,123 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block content %}
+    {% if user.is_superuser %}
+        <p><em>Viewing: customer.html</em></p>
+    {% endif %}
 
 
-    {% block content %}
-    {% if user.is_superuser %}customer.html{% endif %}
 
+<div class="container ">
+    <!-- ROW 1 -->        
+    <div class="row"> 
+        <div class="col">
+            <h1>{{ customer.name }}</h1>
+            <br>
+        </div>
+    </div>
+    <!-- ROW 2 -->        
+  <div class="row">
+        <!-- COLUMN 1 -->   
+        <div class="col" style="text-align: left;">
+            <p><strong>Main Contact:</strong> {{ customer.main_contact }}</p>
+            <p><strong>Hayley Account Manager:</strong> {{ customer.hayley_account_manager }}</p>
+            <br>
+            <p><strong>Phone Number:</strong> {{ customer.phone }}</p>
+            <p><strong>Email:</strong> {{ customer.email }}</p>
+            <p><strong>Website:</strong>
+                <a href="{{ customer.website }}" target="_blank" rel="noopener noreferrer">
+                    {{ customer.website }}
+                </a>
+            </p>
 
-    </br></br>
-    <h1>{{ customer.name }}</h1>
-    </br>
-    <p><strong>Main Contact:</strong> {{ customer.main_contact }}</p>
-    <p><strong>Hayley Account Manager:</strong> {{ customer.hayley_account_manager }}</p>
+            <br>
+            <p><strong>Industry:</strong> {{ customer.industry }}</p>   
+            <p><strong>Sector:</strong> {{ customer.sector }}</p>
+            <p><strong>Location:</strong> {{ customer.location }}</p>
+        </div>
 
-    <br>
-        <p><strong>Address :</strong> {{ customer.address }}</p>
-        <p><strong>Address :</strong> {{ customer.address2 }}</p>
-        <p><strong>City :</strong> {{ customer.city }}</p>
-        <p><strong>County :</strong> {{ customer.county }}</p>
-        <p><strong>Postcode :</strong> {{ customer.postcode }}</p>
-        <p><strong>Country :</strong> {{ customer.country }}</p>
-        <br>
-        <p><strong>Phone Number :</strong> {{ customer.phone_number }}</p>
-        <p><strong>Email :</strong> {{ customer.email }}</p>
-        <p><strong>Notes :</strong> {{ customer.notes }}</p>
-        <p><strong>Website :</strong>
-            <a href="{{ customer.website }}" target="_blank" rel="noopener noreferrer">
-                {{ customer.website }}
-            </a>
-        </p>
-        <br>
-        <p><strong>Industry :</strong> {{ customer.industry }}</p>  
-        <p><strong>Sector :</strong> {{ customer.sector }}</p>  
-
-        <p><strong>Location :</strong> {{ customer.location }}</p>  
-        
-
-    </br>
-
-    <a href="{% url 'customer_edit' customer.id %}" class="btn btn-primary">Edit Customer</a>
-    <a href="{% url 'customer_delete' customer.id %}" class="btn btn-danger">Delete Customer</a>
+<!-- COLUMN 2 -->
+<div class="col d-flex flex-column justify-content-between" style="text-align: left;">
     
-    </br> </br>
-    <a href="{% url 'customers' %}">Back</a>
+    <!-- COLUMN 2 row 1 -->
+    <div>
+        <strong>Address</strong> </br>
+    {% if customer.address1 %}
+        {{ customer.address1 }}<br>
+    {% endif %}
+    
+    {% if customer.address2 %}
+        {{ customer.address2 }}<br>
+    {% endif %}
+    
+    {% if customer.city %}
+        {{ customer.city }}<br>
+    {% endif %}
+    
+    {% if customer.county %}
+        {{ customer.county }}<br>
+    {% endif %}
+    
+    {% if customer.postcode %}
+        {{ customer.postcode }}<br>
+    {% endif %}
+    
+    {% if customer.country %}
+        {{ customer.country }}<br>
+    {% endif %}
 
-    {% endblock %}
+
+    </div>
+
+    <!-- COLUMN 2 row 2 -->
+    <div class="mt-auto text-end pb-2">
+        <a href="{% url 'customer_edit' customer.id %}" class="btn btn-primary">Edit</a>
+        <a href="{% url 'customer_delete' customer.id %}" class="btn btn-danger">Delete</a>
+    </div>
+
+</div>
+
+        <!-- ROW 3 -->        
+    <div class="row">
+        <div class="col border rounded p-3 ">
+            <p><strong>Notes:</strong> {{ customer.notes }}</p>
+            <br>
+        </div>
+    </div>
+
+  </div>
+</div>
+
+
+    <br><br>
+    <h2>Problems Reported</h2>
+
+    {% if problems %}
+        <ul class="list-group">
+            {% for problem in problems %}
+                <li class="list-group-item">
+                    <strong>{{ problem.title }}</strong> <br>
+                    <strong>Status:</strong> {{ problem.status }} |
+                    <strong>Urgency:</strong> {{ problem.urgency }} <br>
+                    <strong>Description:</strong> {{ problem.description }} <br>
+                    {% if problem.root_cause %}
+                        <strong>Root Cause:</strong> {{ problem.root_cause }} <br>
+                    {% endif %}
+                    {% if problem.impact %}
+                        <strong>Impact:</strong> {{ problem.impact }} <br>
+                    {% endif %}
+                    {% if problem.notes %}
+                        <strong>Notes:</strong> {{ problem.notes }} <br>
+                    {% endif %}
+                    <strong>Created:</strong> {{ problem.created_at|date:"d M Y" }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No problems reported for this customer.</p>
+    {% endif %}
+
+    <br><br>
+    <a href="{% url 'customers' %}">Back</a>
+{% endblock %}

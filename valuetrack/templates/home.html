@@ -4,7 +4,7 @@
 
 
     {% block content %}
-    home.html
+    {% if user.is_superuser %}home.html{% endif %}
 
 
     <h1>Welcome to the Home Page</h1>

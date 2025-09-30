@@ -17,9 +17,11 @@ def home(request):
 def Customers(request):
     customers = Customer.objects.all()
     customer_count = customers.count()
+    form = UpdateCustomer()
     return render(request, 'customers.html', {
         'customers': customers,
-        'customer_count': customer_count
+        'customer_count': customer_count,
+        'form': form
     })
 
 
@@ -27,8 +29,9 @@ def Customers(request):
 # View Single Customer
 @login_required
 def customer(request, pk):
-	customer = get_object_or_404(Customer, pk=pk)
-	return render(request, 'customer.html', {'customer': customer})
+    customer = get_object_or_404(Customer, pk=pk)
+    problems = customer.problem_statements.all()  # ✅ Use the related_name
+    return render(request, 'customer.html', {'customer': customer, 'problems': problems})
 
 # Add Customer
 @login_required
