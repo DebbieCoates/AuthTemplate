@@ -4,9 +4,9 @@
 
 
     {% block content %}
-    customers.html
+    {% if user.is_superuser %}customer.html{% endif %}
 
-    <h1>Customers</h1>
+    <h1>Customers ({{ customer_count }})</h1>
     </br> 
     <div class="mt-4">
         <a href="{% url 'customer_add' %}" >Add Customer</a>

@@ -4,7 +4,7 @@
 
 
     {% block content %}
-    customer_add.html
+    {% if user.is_superuser %}customer_add.html{% endif %}
 
     <br/><br/>    
 

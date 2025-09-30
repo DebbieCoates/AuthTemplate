@@ -15,8 +15,14 @@ def home(request):
 # View Customers
 @login_required
 def Customers(request):
-	customers = Customer.objects.all()
-	return render(request, 'customers.html', {'customers': customers})
+    customers = Customer.objects.all()
+    customer_count = customers.count()
+    return render(request, 'customers.html', {
+        'customers': customers,
+        'customer_count': customer_count
+    })
+
+
 
 # View Single Customer
 @login_required

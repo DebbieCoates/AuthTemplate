@@ -4,7 +4,8 @@
 
 
     {% block content %}
-    customer.html
+    {% if user.is_superuser %}customer.html{% endif %}
+
 
     </br></br>
     <h1>{{ customer.name }}</h1>
