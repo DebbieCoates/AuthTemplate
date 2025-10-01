@@ -12,19 +12,31 @@ def home(request):
     return render(request, 'home.html')
 
 ################################################# Customers
-# View Customers
+from django.shortcuts import render
+from .models import Customer
+from .forms import UpdateCustomer
+
+class CustomerFormWrapper:
+    def __init__(self, customer, form):
+        self.customer = customer
+        self.form = form
+
 @login_required
-def Customers(request):
+def customers(request):
     customers = Customer.objects.all()
     customer_count = customers.count()
-    form = UpdateCustomer()
-    return render(request, 'customers.html', {
-        'customers': customers,
+    add_form = UpdateCustomer()
+
+    wrapped_customers = [
+        CustomerFormWrapper(c, UpdateCustomer(instance=c)) for c in customers
+    ]
+
+    context = {
+        'customers': wrapped_customers,  # now contains both customer and form
         'customer_count': customer_count,
-        'form': form
-    })
-
-
+        'form': add_form,  # for Add modal
+    }
+    return render(request, 'customers.html', context)
 
 # View Single Customer
 @login_required

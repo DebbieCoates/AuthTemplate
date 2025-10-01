@@ -12,9 +12,9 @@ urlpatterns = [
     path('update_password/', views.update_password, name='update_password'),
     
     #Customer
-    path('customers/', views.Customers, name='customers'),
+    path('customers/', views.customers, name='customers'),
     path('customer/<int:pk>/', views.customer, name='customer'),
     path('customer_add/', views.customer_add, name='customer_add'),
     path('customer_edit/<int:pk>/', views.customer_edit, name='customer_edit'),
     path('customer_delete/<int:pk>/', views.customer_delete, name='customer_delete'),
-    ]
+]

@@ -70,11 +70,11 @@
 
     </div>
 
-    <!-- COLUMN 2 row 2 -->
+    {% comment %} <!-- COLUMN 2 row 2 -->
     <div class="mt-auto text-end pb-2">
         <a href="{% url 'customer_edit' customer.id %}" class="btn btn-primary">Edit</a>
         <a href="{% url 'customer_delete' customer.id %}" class="btn btn-danger">Delete</a>
-    </div>
+    </div> {% endcomment %}
 
 </div>
 
