@@ -8,10 +8,20 @@
 
   <!-- Add Problem Button -->
   <div class="mt-4 text-end">
-    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProblemModal">
-      Add Problem
-    </button>
+<button type="button" class="btn btn-success"
+        data-bs-toggle="modal"
+        data-bs-target="#addProblemModal"
+        data-source="problems">
+  Add Problem
+</button>
+
+
   </div>
+
+{% include 'add_problem_modal.html' with form=form %}
+
+
+ 
 
   <!-- Problems Table -->
   <table class="table table-striped table-hover table-bordered mt-3">
@@ -47,7 +57,17 @@
     </tbody>
   </table>
 
+<script>
+  const addProblemModal = document.getElementById('addProblemModal');
+  addProblemModal.addEventListener('show.bs.modal', function (event) {
+    const triggerButton = event.relatedTarget;
+    const source = triggerButton.getAttribute('data-source');
+    const customerId = triggerButton.getAttribute('data-customer-id');
 
-{% include 'add_problem_modal.html' %}
+    document.getElementById('calledFromInput').value = source || '';
+    document.getElementById('customerIdInput').value = customerId || '';
+  });
+</script>
+
  
 {% endblock %}

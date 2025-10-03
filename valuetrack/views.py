@@ -49,7 +49,13 @@ def problem_add(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'New problem added successfully.')
-            return redirect('problems')  # or wherever your problem list lives
+
+            called_from = request.POST.get('called_from')
+            customer_id = request.POST.get('customer_id')
+
+            if called_from == 'customer' and customer_id:
+                return redirect('customer', pk=customer_id)
+            return redirect('problems')
     else:
         form = UpdateProblem()
 
@@ -112,8 +118,13 @@ def customers(request):
 @login_required
 def customer(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
-    problems = customer.problem_statements.all()  # ✅ Use the related_name
-    return render(request, 'customer.html', {'customer': customer, 'problems': problems})
+    problems = customer.problem_statements.all()
+    form = UpdateProblem()
+    return render(request, 'customer.html', {
+        'customer': customer,
+        'problems': problems,
+        'form': form,
+    })
 
 # Add Customer
 @login_required

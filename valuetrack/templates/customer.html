@@ -94,5 +94,28 @@
     {% endif %}
     <br><br>
 
+    
+<button type="button" class="btn btn-success"
+        data-bs-toggle="modal"
+        data-bs-target="#addProblemModal"
+        data-source="customer"
+        data-customer-id="{{ customer.id }}">
+  Add Problem
+</button>
+
+{% include 'add_problem_modal.html' with form=form %}
+
+
+<script>
+  const addProblemModal = document.getElementById('addProblemModal');
+  addProblemModal.addEventListener('show.bs.modal', function (event) {
+    const triggerButton = event.relatedTarget;
+    const source = triggerButton.getAttribute('data-source');
+    const customerId = triggerButton.getAttribute('data-customer-id');
+
+    document.getElementById('calledFromInput').value = source || '';
+    document.getElementById('customerIdInput').value = customerId || '';
+  });
+</script>
 
 {% endblock %}
