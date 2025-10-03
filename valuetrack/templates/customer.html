@@ -2,125 +2,125 @@
 {% load static %}
 
 {% block content %}
-    {% if user.is_superuser %} <p><em>Viewing: customer.html</em></p> {% endif %}
+  {% if user.is_superuser %} <p><em>Viewing: customer.html</em></p> {% endif %}
 
-    <!-- Customer Details -->
-    <div class="container">
-        <!-- ROW 1 -->
-        <div class="row">
-            <div class="col">
-            <h1>{{ customer.name }}</h1>
-            <br>
-            </div>
-        </div>
-
-        <!-- ROW 2 -->
-        <div class="row">
-            <!-- COLUMN 1 -->
-            <div class="col" style="text-align: left;">
-            <strong>Main Contact:</strong> {{ customer.main_contact }}<br>
-            <strong>Hayley Account Manager:</strong> {{ customer.hayley_account_manager }}<br>
-            <strong>Phone Number:</strong> {{ customer.phone }}<br>
-            <strong>Email:</strong> {{ customer.email }}<br>
-            <strong>Website:</strong>
-            <a href="{{ customer.website }}" target="_blank" rel="noopener noreferrer">
-                {{ customer.website }}
-            </a><br>
-            <strong>Industry:</strong> {{ customer.industry }}<br>
-            <strong>Sector:</strong> {{ customer.sector }}<br>
-            <strong>Location:</strong> {{ customer.location }}<br>
-            </div>
-
-            <!-- COLUMN 2 -->
-            <div class="col d-flex flex-column justify-content-between" style="text-align: left;">
-            <!-- COLUMN 2 row 1 -->
-            <div>
-                <strong>Address</strong><br>
-                {% if customer.address1 %}{{ customer.address1 }}<br>{% endif %}
-                {% if customer.address2 %}{{ customer.address2 }}<br>{% endif %}
-                {% if customer.city %}{{ customer.city }}<br>{% endif %}
-                {% if customer.county %}{{ customer.county }}<br>{% endif %}
-                {% if customer.postcode %}{{ customer.postcode }}<br>{% endif %}
-                {% if customer.country %}{{ customer.country }}<br>{% endif %}
-            </div>
-            </div>
-        </div>
-
-        <!-- ROW 3 -->
-        <div class="row mt-4">
-            <div class="col border rounded p-3">
-            <p><strong>Notes:</strong> {{ customer.notes }}</p>
-            <br>
-            </div>
-        </div>
+  <!-- Customer Details -->
+  <div class="container">
+    <!-- ROW 1 -->
+    <div class="row">
+      <div class="col">
+        <h1>{{ customer.name }}</h1>
+        <br>
+      </div>
     </div>
-    <!--End of  Customer Details -->
 
-    <br>
-    <a href="{% url 'customers' %}"> Back</a>
-    <br><br>
+    <!-- ROW 2 -->
+    <div class="row">
+      <!-- COLUMN 1 -->
+      <div class="col" style="text-align: left;">
+        <strong>Main Contact:</strong> {{ customer.main_contact }}<br>
+        <strong>Hayley Account Manager:</strong> {{ customer.hayley_account_manager }}<br>
+        <strong>Phone Number:</strong> {{ customer.phone }}<br>
+        <strong>Email:</strong> {{ customer.email }}<br>
+        <strong>Website:</strong>
+        <a href="{{ customer.website }}" target="_blank" rel="noopener noreferrer">
+          {{ customer.website }}
+        </a><br>
+        <strong>Industry:</strong> {{ customer.industry }}<br>
+        <strong>Sector:</strong> {{ customer.sector }}<br>
+        <strong>Location:</strong> {{ customer.location }}<br>
+      </div>
 
-    {% if problems %}
-        <p><em> Issues listed for this customer.</em></p>
-            <table class="table table-bordered table-hover table-striped mt-4">
-            <thead>
-                <tr>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Urgency</th>
-                <th>Description</th>
-                {% comment %} <th>Root Cause</th>
-                <th>Impact</th> {% endcomment %}
-                <th>Created</th>
-                <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for problem in problems %}
-                <tr>
-                <td><a href="{% url 'problem' problem.id %}">{{ problem.title }}</a></td>
-                <td>{{ problem.status }}</td>
-                <td>{{ problem.urgency }}</td>
-                <td>{{ problem.description }}</td>
-                {% comment %} <td>{% if problem.root_cause %}{{ problem.root_cause }}{% else %}-{% endif %}</td>
-                <td>{% if problem.impact %}{{ problem.impact }}{% else %}-{% endif %}</td> {% endcomment %}
-                <td>{{ problem.created_at|date:"d/m/Y" }}</td>
-                <td>
-                    
-                    <a href="{% url 'problem_delete' problem.pk %}?next={{ request.path }}">Delete</a>
-                </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            </table>
+      <!-- COLUMN 2 -->
+      <div class="col d-flex flex-column justify-content-between" style="text-align: left;">
+        <div>
+          <strong>Address</strong><br>
+          {% if customer.address1 %}{{ customer.address1 }}<br>{% endif %}
+          {% if customer.address2 %}{{ customer.address2 }}<br>{% endif %}
+          {% if customer.city %}{{ customer.city }}<br>{% endif %}
+          {% if customer.county %}{{ customer.county }}<br>{% endif %}
+          {% if customer.postcode %}{{ customer.postcode }}<br>{% endif %}
+          {% if customer.country %}{{ customer.country }}<br>{% endif %}
+        </div>
+      </div>
+    </div>
 
-    {% else %}
-        <p><em>No Issues listed for this customer.</em></p>
-    {% endif %}
-    <br><br>
+    <!-- ROW 3 -->
+    <div class="row mt-4">
+      <div class="col border rounded p-3">
+        <p><strong>Notes:</strong> {{ customer.notes }}</p>
+        <br>
+      </div>
+    </div>
+  </div>
+  <!--End of Customer Details -->
 
-    
-<button type="button" class="btn btn-success"
-        data-bs-toggle="modal"
-        data-bs-target="#addProblemModal"
-        data-source="customer"
-        data-customer-id="{{ customer.id }}">
-  Add Problem
-</button>
+  <br>
+  <a href="{% url 'customers' %}">Back</a>
+  <br><br>
 
-{% include 'add_problem_modal.html' with form=form %}
+  {% if problems %}
+    <p><em>Issues listed for this customer.</em></p>
+    <table class="table table-bordered table-hover table-striped mt-4">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Urgency</th>
+          <th>Description</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for wrapped in problems %}
+          {% with problem=wrapped.problem form=wrapped.form %}
+            <tr>
+              <td><a href="{% url 'problem' problem.id %}">{{ problem.title }}</a></td>
+              <td>{{ problem.status }}</td>
+              <td>{{ problem.urgency }}</td>
+              <td>{{ problem.description }}</td>
+              <td>{{ problem.created_at|date:"d/m/Y" }}</td>
+              <td>
+                <a href="#"
+                   data-bs-toggle="modal"
+                   data-bs-target="#editProblemModal{{ problem.id }}"
+                   data-source="customer">Edit</a>
+                &nbsp; | &nbsp;
+                <a href="{% url 'problem_delete' problem.pk %}?next={{ request.path }}">Delete</a>
+              </td>
+            </tr>
 
+            {% include 'edit_problem_modal.html' with problem=problem form=form called_from='customer' %}
+          {% endwith %}
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p><em>No Issues listed for this customer.</em></p>
+  {% endif %}
+  <br><br>
 
-<script>
-  const addProblemModal = document.getElementById('addProblemModal');
-  addProblemModal.addEventListener('show.bs.modal', function (event) {
-    const triggerButton = event.relatedTarget;
-    const source = triggerButton.getAttribute('data-source');
-    const customerId = triggerButton.getAttribute('data-customer-id');
+  <!-- Add Problem Button -->
+  <button type="button" class="btn btn-success"
+          data-bs-toggle="modal"
+          data-bs-target="#addProblemModal"
+          data-source="customer"
+          data-customer-id="{{ customer.id }}">
+    Add Problem
+  </button>
 
-    document.getElementById('calledFromInput').value = source || '';
-    document.getElementById('customerIdInput').value = customerId || '';
-  });
-</script>
+  {% include 'add_problem_modal.html' with form=form %}
 
+  <script>
+    const addProblemModal = document.getElementById('addProblemModal');
+    addProblemModal.addEventListener('show.bs.modal', function (event) {
+      const triggerButton = event.relatedTarget;
+      const source = triggerButton.getAttribute('data-source');
+      const customerId = triggerButton.getAttribute('data-customer-id');
+
+      document.getElementById('calledFromInput').value = source || '';
+      document.getElementById('customerIdInput').value = customerId || '';
+    });
+  </script>
 {% endblock %}

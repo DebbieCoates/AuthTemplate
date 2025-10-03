@@ -15,7 +15,6 @@
   Add Problem
 </button>
 
-
   </div>
 
 {% include 'add_problem_modal.html' with form=form %}
@@ -42,7 +41,7 @@
       <td>{{ problem.urgency }}</td>
       <td>{{ problem.created_at|date:"d/m/Y" }}</td>
       <td>
-        <a href="#" data-bs-toggle="modal" data-bs-target="#editProblemModal{{ problem.id }}">Edit</a> &nbsp; | &nbsp;
+        <a href="#" data-bs-toggle="modal" data-bs-target="#editProblemModal{{ problem.id }}" data-source="problems">Edit</a> &nbsp; | &nbsp;
         <a href="{% url 'problem_delete' problem.pk %}?next={{ request.path }}">Delete</a>
       </td>
     </tr>

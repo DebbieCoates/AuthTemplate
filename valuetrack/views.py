@@ -75,18 +75,25 @@ def problem_edit(request, pk):
 
     if request.method == 'POST':
         form = UpdateProblem(request.POST, instance=problem)
+        called_from = request.POST.get('called_from', '').strip()
+
         if form.is_valid():
             form.save()
             messages.success(request, 'Problem updated successfully.')
-            return redirect('problems')  # Redirect back to the list view
+
+            if called_from == 'customer':
+                return redirect('customer', pk=problem.customer.pk)
+            else:
+                return redirect('problems')
     else:
         form = UpdateProblem(instance=problem)
 
     return render(request, 'problems.html', {
         'form': form,
         'problem': problem,
-        'edit_mode': True  # Optional flag if you want to conditionally trigger the modal
+        'edit_mode': True
     })
+
 
 # Delete Problem
 @login_required
@@ -132,13 +139,17 @@ def customers(request):
 def customer(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
     problems = customer.problem_statements.all()
-    form = UpdateProblem(initial={'customer': customer})
+
+    wrapped_problems = []
+    for problem in problems:
+        form = UpdateProblem(instance=problem)
+        wrapped_problems.append({'problem': problem, 'form': form})
+
     return render(request, 'customer.html', {
         'customer': customer,
-        'problems': problems,
-        'form': form,
+        'problems': wrapped_problems,
+        'form': UpdateProblem(initial={'customer': customer}),  # for Add Problem modal
     })
-
 # Add Customer
 @login_required
 def customer_add(request):
