@@ -33,8 +33,6 @@ def problems(request):
         'form': add_form
     })
 
-
-
 # View Single Problem
 @login_required
 def problem(request, pk):
@@ -92,6 +90,7 @@ class CustomerFormWrapper:
         self.customer = customer
         self.form = form
 
+# View All Customers
 @login_required
 def customers(request):
     customers = Customer.objects.all()
