@@ -7,57 +7,86 @@
   <h1>Categories, Services, and Solutions</h1>
   <br><br>
 
-
-
+  {% comment %} <!-- Add Buttons Row -->
+  <div class="d-flex justify-content-start align-items-center flex-wrap gap-2 mb-3">
+    <button onclick="openModal('{% url 'add_category' %}')" class="btn btn-outline-primary btn-sm">
+      <i class="bi bi-plus-circle"></i> Add Category
+    </button>
+    <button onclick="openModal('{% url 'add_service' %}')" class="btn btn-outline-success btn-sm">
+      <i class="bi bi-plus-circle"></i> Add Service
+    </button>
+    <button onclick="openModal('{% url 'add_solution' %}')" class="btn btn-outline-info btn-sm">
+      <i class="bi bi-plus-circle"></i> Add Solution
+    </button>
+  </div> {% endcomment %}
 
   <!-- Filter Form -->
-<form method="get" id="filterForm" class="mb-4">
-  <div class="row g-2 align-items-center">
-    <!-- Category Filter -->
+  <form method="get" id="filterForm" class="mb-4">
+    <div class="row g-2 align-items-center">
+    <!-- Category Filter + Button -->
     <div class="col" style="flex: 0 0 30%;">
-      <select name="category" class="form-select select2 auto-submit">
-        <option value="">All Categories</option>
-        {% for category in categories %}
-          <option value="{{ category.name }}" {% if category.name == selected_category %}selected{% endif %}>{{ category.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <!-- Service Filter -->
-    <div class="col" style="flex: 0 0 30%;">
-      <select name="service" class="form-select select2 auto-submit">
-        <option value="">All Services</option>
-        {% for category in categories %}
-          {% for service in category.services.all %}
-            <option value="{{ service.name }}" {% if service.name == selected_service %}selected{% endif %}>{{ service.name }}</option>
+      <div class="d-flex align-items-center gap-2">
+        <select name="category" class="form-select select2 auto-submit w-100">
+          <option value="">All Categories</option>
+          {% for category in categories %}
+            <option value="{{ category.name }}" {% if category.name == selected_category %}selected{% endif %}>{{ category.name }}</option>
           {% endfor %}
-        {% endfor %}
-      </select>
+        </select>
+        <button onclick="openModal('{% url 'add_category' %}')" type="button" class="btn btn-outline-primary btn-sm">
+          <i class="bi bi-plus-circle"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- Solution Filter -->
+    <!-- Service Filter + Button -->
     <div class="col" style="flex: 0 0 30%;">
-      <select name="solution" class="form-select select2 auto-submit">
-        <option value="">All Solutions</option>
-        {% for category in categories %}
-          {% for service in category.services.all %}
-            {% for solution in service.solutions.all %}
-              <option value="{{ solution.name }}" {% if solution.name == selected_solution %}selected{% endif %}>{{ solution.name }}</option>
+      <div class="d-flex align-items-center gap-2">
+        <select name="service" class="form-select select2 auto-submit w-100">
+          <option value="">All Services</option>
+          {% for category in categories %}
+            {% for service in category.services.all %}
+              <option value="{{ service.name }}" {% if service.name == selected_service %}selected{% endif %}>{{ service.name }}</option>
             {% endfor %}
           {% endfor %}
-        {% endfor %}
-      </select>
+        </select>
+        <button onclick="openModal('{% url 'add_service' %}')" type="button" class="btn btn-outline-primary btn-sm">
+          <i class="bi bi-plus-circle"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- Clear Filters Button -->
-    <div class="col" style="flex: 0 0 10%;">
-      <a href="{% url request.resolver_match.view_name %}" class="btn btn-sm btn-secondary w-100">
-        Clear
-      </a>
+
+    <!-- Solution Filter + Button -->
+    <div class="col" style="flex: 0 0 30%;">
+      <div class="d-flex align-items-center gap-2">
+        <select name="solution" class="form-select select2 auto-submit w-100">
+          <option value="">All Solutions</option>
+          {% for category in categories %}
+            {% for service in category.services.all %}
+              {% for solution in service.solutions.all %}
+                <option value="{{ solution.name }}" {% if solution.name == selected_solution %}selected{% endif %}>{{ solution.name }}</option>
+              {% endfor %}
+            {% endfor %}
+          {% endfor %}
+        </select>
+        <button onclick="openModal('{% url 'add_solution' %}')" type="button" class="btn btn-outline-primary btn-sm">
+          <i class="bi bi-plus-circle"></i>
+        </button>
+      </div>
     </div>
-  </div>
-</form>
-  <!-- Display the filtered results in a table -->
+
+
+
+      <!-- Clear Filters Button -->
+      <div class="col" style="flex: 0 0 10%;">
+        <a href="{% url request.resolver_match.view_name %}" class="btn btn-sm btn-secondary w-100">
+          Clear
+        </a>
+      </div>
+    </div>
+  </form>
+
+  <!-- Results Table -->
   <table class="table table-bordered table-striped">
     <thead>
       <tr>
@@ -68,22 +97,58 @@
     </thead>
     <tbody>
       {% for category in categories %}
-        {% for service in category.services.all %}
-          {% for solution in service.solutions.all %}
-            {% if not selected_service or service.name == selected_service %}
-              {% if not selected_solution or solution.name == selected_solution %}
+        {% if category.services.all %}
+          {% for service in category.services.all %}
+            {% if service.solutions.all %}
+              {% for solution in service.solutions.all %}
+                {% if not selected_service or service.name == selected_service %}
+                  {% if not selected_solution or solution.name == selected_solution %}
+                    <tr>
+                      <td>{{ category.name }}</td>
+                      <td>{{ service.name }}</td>
+                      <td>{{ solution.name }}</td>
+                    </tr>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% if not selected_service or service.name == selected_service %}
                 <tr>
                   <td>{{ category.name }}</td>
                   <td>{{ service.name }}</td>
-                  <td>{{ solution.name }}</td>
+                  <td><em class="text-muted">No Solutions Listed</em></td>
                 </tr>
               {% endif %}
             {% endif %}
           {% endfor %}
-        {% endfor %}
+        {% else %}
+          <tr>
+            <td>{{ category.name }}</td>
+            <td><em class="text-muted">No Services Listed</em></td>
+            <td><em class="text-muted">—</em></td>
+          </tr>
+        {% endif %}
       {% endfor %}
     </tbody>
   </table>
+
+  <!-- Modal Shell -->
+  <div class="modal fade" id="dynamicModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Item</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- Partial form will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
   <!-- jQuery and Select2 -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -100,6 +165,28 @@
       }).on('change', function () {
         document.getElementById('filterForm').submit();
       });
+    });
+
+    // Load modal content
+    function openModal(url) {
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('modalBody').innerHTML = html;
+          new bootstrap.Modal(document.getElementById('dynamicModal')).show();
+        });
+    }
+
+    // Handle form submission via AJAX
+    document.addEventListener('submit', function (e) {
+      if (['categoryForm', 'serviceForm', 'solutionForm'].includes(e.target.id)) {
+        e.preventDefault();
+        fetch(e.target.action, {
+          method: 'POST',
+          body: new FormData(e.target),
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        }).then(() => location.reload());
+      }
     });
   </script>
 {% endblock %}

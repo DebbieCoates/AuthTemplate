@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Customer, Problem, Service, Solution, Category
 from django.contrib import messages
-from .forms import  SignUpForm,  UpdateUserForm, ChangePasswordForm, UpdateCustomer, UpdateProblem
+from .forms import  CategoryForm, SignUpForm,  UpdateUserForm, ChangePasswordForm, UpdateCustomer, UpdateProblem, CategoryForm, ServiceForm, SolutionForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import Customer
-from .forms import UpdateCustomer
 from django.http import HttpResponseRedirect
 
 
@@ -15,7 +14,42 @@ from django.http import HttpResponseRedirect
 def home(request):
     return render(request, 'home.html')
 
+################################################# Category Hierarchy
 
+
+def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('category_hierarchy')  # or use JsonResponse for AJAX
+    else:
+        form = CategoryForm()
+    return render(request, 'partials/add_category_form.html', {'form': form})
+
+# Repeat for add_service and add_solution
+def add_service(request):
+    if request.method == 'POST':
+        form = ServiceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('category_hierarchy')  # or use JsonResponse for AJAX
+    else:
+        form = ServiceForm()
+    return render(request, 'partials/add_service_form.html', {'form': form})
+
+
+def add_solution(request):
+    if request.method == 'POST':
+        form = SolutionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('category_hierarchy')  # or use JsonResponse for AJAX
+    else:
+        form = SolutionForm()
+    return render(request, 'partials/add_solution_form.html', {'form': form})
+
+@login_required
 def category_hierarchy(request):
     selected_category = request.GET.get('category')
     selected_service = request.GET.get('service')

@@ -26,4 +26,7 @@ urlpatterns = [
     path('problem_delete/<int:pk>/', views.problem_delete, name='problem_delete'),
     
     path('category_hierarchy/', views.category_hierarchy, name='category_hierarchy'),
+    path('add_category/', views.add_category, name='add_category'),
+    path('add_service/', views.add_service, name='add_service'),
+    path('add_solution/', views.add_solution, name='add_solution'),
 ]

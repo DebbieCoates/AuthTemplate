@@ -1,8 +1,25 @@
 from django import forms
-from .models import Customer, Problem
+from .models import Customer, Problem, Category, Service, Solution
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
 from django.contrib.auth.models import User
 
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name', 'description']
+
+class ServiceForm(forms.ModelForm):
+    class Meta:
+        model = Service
+        fields = ['name', 'description', 'category']
+
+class SolutionForm(forms.ModelForm):
+    class Meta:
+        model = Solution
+        fields = ['name', 'description', 'service']
+        
+        
 class UpdateProblem(forms.ModelForm):
     customer = forms.ModelChoiceField(label='Customer',queryset=Customer.objects.all(),widget=forms.Select(attrs={'class': 'form-control'}),required=True)
     title = forms.CharField(label='Title',widget=forms.TextInput(attrs={'placeholder': 'Problem Title', 'class': 'form-control'}),max_length=200,required=True)
