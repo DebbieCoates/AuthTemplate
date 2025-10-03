@@ -72,6 +72,7 @@
                 {% comment %} <th>Root Cause</th>
                 <th>Impact</th> {% endcomment %}
                 <th>Created</th>
+                <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -84,6 +85,10 @@
                 {% comment %} <td>{% if problem.root_cause %}{{ problem.root_cause }}{% else %}-{% endif %}</td>
                 <td>{% if problem.impact %}{{ problem.impact }}{% else %}-{% endif %}</td> {% endcomment %}
                 <td>{{ problem.created_at|date:"d/m/Y" }}</td>
+                <td>
+                    
+                    <a href="{% url 'problem_delete' problem.pk %}?next={{ request.path }}">Delete</a>
+                </td>
                 </tr>
                 {% endfor %}
             </tbody>

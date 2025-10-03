@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import Customer
 from .forms import UpdateCustomer
+from django.http import HttpResponseRedirect
+
 
 # Create your views here.
 def home(request):
@@ -89,10 +91,16 @@ def problem_edit(request, pk):
 # Delete Problem
 @login_required
 def problem_delete(request, pk):
-   problem = get_object_or_404(Problem, pk=pk)
-   problem.delete()
-   messages.success(request, 'Problem deleted successfully.')
-   return redirect('problems')
+    problem = get_object_or_404(Problem, pk=pk)
+    problem.delete()
+    messages.success(request, 'Problem deleted successfully.')
+
+    next_url = request.GET.get('next')
+    if next_url:
+        return HttpResponseRedirect(next_url)
+    return redirect('problems')  # fallback
+
+
 
 ################################################# Customers
 
@@ -130,8 +138,6 @@ def customer(request, pk):
         'problems': problems,
         'form': form,
     })
-
-
 
 # Add Customer
 @login_required
