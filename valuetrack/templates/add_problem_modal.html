@@ -1,0 +1,69 @@
+ <!-- Add Problem Modal -->
+  <div class="modal fade" id="addProblemModal" tabindex="-1" aria-labelledby="addProblemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'problem_add' %}">
+          {% csrf_token %}
+          <div class="modal-header">
+            <h5 class="modal-title" id="addProblemModalLabel">Add New Problem</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body">
+            <div class="row">
+              <!-- Left Column -->
+              <div class="col-md-6">
+                {% for field in form %}
+                  {% if field.name not in 'root_cause impact notes' %}
+                    <div class="row mb-2 align-items-center">
+                      <div class="col-md-4 text-md-end">
+                        <label class="form-label mb-0">{{ field.label }}</label>
+                      </div>
+                      <div class="col-md-8">
+                        {{ field }}
+                        {% if field.errors %}
+                          <div class="text-danger small">{{ field.errors }}</div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              <!-- Right Column -->
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">{{ form.root_cause.label }}</label>
+                  {{ form.root_cause }}
+                  {% if form.root_cause.errors %}
+                    <div class="text-danger small">{{ form.root_cause.errors }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">{{ form.impact.label }}</label>
+                  {{ form.impact }}
+                  {% if form.impact.errors %}
+                    <div class="text-danger small">{{ form.impact.errors }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">{{ form.notes.label }}</label>
+                  {{ form.notes }}
+                  {% if form.notes.errors %}
+                    <div class="text-danger small">{{ form.notes.errors }}</div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save Problem</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

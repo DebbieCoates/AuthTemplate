@@ -1,20 +1,91 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Customer 
+from .models import Customer, Problem 
 from django.contrib import messages
-from .forms import  SignUpForm,  UpdateUserForm, ChangePasswordForm, UpdateCustomer
+from .forms import  SignUpForm,  UpdateUserForm, ChangePasswordForm, UpdateCustomer, UpdateProblem
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-
+from django.shortcuts import render
+from .models import Customer
+from .forms import UpdateCustomer
 
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
 
+################################################# Problems
+
+# View All Problems
+@login_required
+def problems(request):
+    problems = Problem.objects.all()
+    add_form = UpdateProblem()
+
+    wrapped_problems = []
+    for problem in problems:
+        wrapped_problems.append({
+            'problem': problem,
+            'form': UpdateProblem(instance=problem)
+        })
+
+    return render(request, 'problems.html', {
+        'problems': wrapped_problems,
+        'form': add_form
+    })
+
+
+
+# View Single Problem
+@login_required
+def problem(request, pk):
+    problem = Problem.objects.all()
+    customer = Customer.objects.all()
+    problem = get_object_or_404(problem, pk=pk)
+    return render(request, 'problem.html', {'problem': problem, 'customer': customer})
+
+# Add Problem
+@login_required
+def problem_add(request):
+    if request.method == 'POST':
+        form = UpdateProblem(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'New problem added successfully.')
+            return redirect('problems')  # or wherever your problem list lives
+    else:
+        form = UpdateProblem()
+
+    return render(request, 'problems.html', {'form': form})
+
+# Edit Problem
+@login_required
+def problem_edit(request, pk):
+    problem = get_object_or_404(Problem, pk=pk)
+
+    if request.method == 'POST':
+        form = UpdateProblem(request.POST, instance=problem)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Problem updated successfully.')
+            return redirect('problems')  # Redirect back to the list view
+    else:
+        form = UpdateProblem(instance=problem)
+
+    return render(request, 'problems.html', {
+        'form': form,
+        'problem': problem,
+        'edit_mode': True  # Optional flag if you want to conditionally trigger the modal
+    })
+
+# Delete Problem
+@login_required
+def problem_delete(request, pk):
+   problem = get_object_or_404(Problem, pk=pk)
+   problem.delete()
+   messages.success(request, 'Problem deleted successfully.')
+   return redirect('problems')
+
 ################################################# Customers
-from django.shortcuts import render
-from .models import Customer
-from .forms import UpdateCustomer
 
 class CustomerFormWrapper:
     def __init__(self, customer, form):
@@ -56,7 +127,7 @@ def customer_add(request):
             return redirect('customers')
     else:
         form = UpdateCustomer()
-    return render(request, 'customer_add.html', {'form': form})
+    return render(request, 'customers.html.html', {'form': form})
 
 # Delete Customer
 @login_required
@@ -83,7 +154,7 @@ def customer_edit(request, pk):
             form.save()
             messages.success(request, f'Customer {customer.name} updated successfully.')
             return redirect('customers')
-    return render(request, 'customer_edit.html', {'customer': customer, 'form': form})
+    return render(request, 'customers.html', {'customer': customer, 'form': form})
     
 
 ################################################# Authoristion 

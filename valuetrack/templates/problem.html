@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+    {% block content %}
+    {% if user.is_superuser %}Problem.html{% endif %}<br><br>
+
+
+        <h1>{{ problem.title }}</h1>
+        <br>
+
+        <br><strong>Title: </strong>{{ problem.title }}
+        <br><strong>Customer: </strong><a href="{% url 'customer' problem.customer.id %}">{{ problem.customer }}</a>
+        <br><strong>Description: </strong>{{ problem.description }}
+        <br><strong>Status: </strong>{{ problem.status }}
+        <br><strong>Urgency: </strong>{{ problem.urgency }}
+        <br><strong>Created At: </strong>{{ problem.created_at }}
+
+    {% endblock %}

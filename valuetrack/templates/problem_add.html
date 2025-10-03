@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+    {% block content %}
+    {% if user.is_superuser %} problem_add.html{% endif %}
+
+
+    <h1>Welcome to the Add Problem Page</h1>
+    <p>This is where you can add a new problem.</p>
+
+            <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.customer.label }}</label>
+                {{ form.customer }}
+                {% if form.customer.errors %}
+                <div class="text-danger small">{{ form.customer.errors }}</div>
+                {% endif %}
+            </div>
+       
+            <div class="mb-3">
+                <label class="form-label">{{ form.title.label }}</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                <div class="text-danger small">{{ form.title.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.description.label }}</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                <div class="text-danger small">{{ form.description.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.root_cause.label }}</label>
+                {{ form.root_cause }}
+                {% if form.root_cause.errors %}     
+                <div class="text-danger small">{{ form.root_cause.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.impact.label }}</label>
+                {{ form.impact }}
+                {% if form.impact.errors %}
+                <div class="text-danger small">{{ form.impact.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.urgency.label }}</label>
+                {{ form.urgency }}
+                {% if form.urgency.errors %}
+                <div class="text-danger small">{{ form.urgency.errors }}</div>
+                {% endif %}
+            </div> 
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.status.label }}</label>
+                {{ form.status }}
+                {% if form.status.errors %}
+                <div class="text-danger small">{{ form.status.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">{{ form.notes.label }}</label>
+                {{ form.notes }}
+                {% if form.notes.errors %}
+                <div class="text-danger small">{{ form.notes.errors }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+
+    <br> <br>
+
+    <a href="{% url 'problems' %}">Back to Problems List</a>
+
+    {% endblock %}

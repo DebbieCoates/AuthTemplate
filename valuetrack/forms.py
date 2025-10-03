@@ -3,8 +3,19 @@ from .models import Customer, Problem
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
 from django.contrib.auth.models import User
 
+class UpdateProblem(forms.ModelForm):
+    customer = forms.ModelChoiceField(label='Customer',queryset=Customer.objects.all(),widget=forms.Select(attrs={'class': 'form-control'}),required=True)
+    title = forms.CharField(label='Title',widget=forms.TextInput(attrs={'placeholder': 'Problem Title', 'class': 'form-control'}),max_length=200,required=True)
+    description = forms.CharField(label='Description',widget=forms.Textarea(attrs={'placeholder': 'Describe the problem', 'class': 'form-control', 'rows': 3}),required=True    )
+    root_cause = forms.CharField(label='Root Cause',widget=forms.Textarea(attrs={'placeholder': 'What caused the issue?', 'class': 'form-control', 'rows': 2}),required=False    )
+    impact = forms.CharField(label='Impact',widget=forms.Textarea(attrs={'placeholder': 'What was affected?', 'class': 'form-control', 'rows': 2}),required=False)
+    urgency = forms.ChoiceField(label='Urgency',choices=Problem.Urgency_CHOICES,widget=forms.Select(attrs={'class': 'form-control'}),required=False)
+    status = forms.ChoiceField(label='Status',choices=Problem.status_CHOICES,widget=forms.Select(attrs={'class': 'form-control'}),required=False)
+    notes = forms.CharField(label='Notes',widget=forms.Textarea(attrs={'placeholder': 'Additional notes', 'class': 'form-control', 'rows': 2}),required=False)
 
-
+    class Meta:
+        model = Problem
+        fields = ['customer','title','description','root_cause','impact','urgency','status','notes']
 
 # Form to Update Customer Details
 class UpdateCustomer(forms.ModelForm):
