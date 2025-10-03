@@ -11,8 +11,12 @@
         <br>
 
         <br><strong>Title: </strong>{{ problem.title }}
+          <br><strong>Description: </strong>{{ problem.description }}
+
+          <br><strong>Root Cause: </strong>{{ problem.root_cause }}
+          <br><strong>Impact: </strong>{{ problem.impact }}
         <br><strong>Customer: </strong><a href="{% url 'customer' problem.customer.id %}">{{ problem.customer }}</a>
-        <br><strong>Description: </strong>{{ problem.description }}
+
         <br><strong>Status: </strong>{{ problem.status }}
         <br><strong>Urgency: </strong>{{ problem.urgency }}
         <br><strong>Created At: </strong>{{ problem.created_at }}
