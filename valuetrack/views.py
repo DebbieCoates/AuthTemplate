@@ -57,7 +57,12 @@ def problem_add(request):
                 return redirect('customer', pk=customer_id)
             return redirect('problems')
     else:
-        form = UpdateProblem()
+        customer_id = request.GET.get('customer_id')
+        if customer_id:
+            customer = get_object_or_404(Customer, pk=customer_id)
+            form = UpdateProblem(initial={'customer': customer})
+        else:
+            form = UpdateProblem()
 
     return render(request, 'problems.html', {'form': form})
 
@@ -119,12 +124,14 @@ def customers(request):
 def customer(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
     problems = customer.problem_statements.all()
-    form = UpdateProblem()
+    form = UpdateProblem(initial={'customer': customer})
     return render(request, 'customer.html', {
         'customer': customer,
         'problems': problems,
         'form': form,
     })
+
+
 
 # Add Customer
 @login_required
