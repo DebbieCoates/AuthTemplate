@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  {% if user.is_superuser %}<p><em>category_hierarchy.html</em></p>{% endif %}
+
+  <h1>Categories, Services, and Solutions</h1>
+  <br><br>
+
+
+
+
+  <!-- Filter Form -->
+<form method="get" id="filterForm" class="mb-4">
+  <div class="row g-2 align-items-center">
+    <!-- Category Filter -->
+    <div class="col" style="flex: 0 0 30%;">
+      <select name="category" class="form-select select2 auto-submit">
+        <option value="">All Categories</option>
+        {% for category in categories %}
+          <option value="{{ category.name }}" {% if category.name == selected_category %}selected{% endif %}>{{ category.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Service Filter -->
+    <div class="col" style="flex: 0 0 30%;">
+      <select name="service" class="form-select select2 auto-submit">
+        <option value="">All Services</option>
+        {% for category in categories %}
+          {% for service in category.services.all %}
+            <option value="{{ service.name }}" {% if service.name == selected_service %}selected{% endif %}>{{ service.name }}</option>
+          {% endfor %}
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Solution Filter -->
+    <div class="col" style="flex: 0 0 30%;">
+      <select name="solution" class="form-select select2 auto-submit">
+        <option value="">All Solutions</option>
+        {% for category in categories %}
+          {% for service in category.services.all %}
+            {% for solution in service.solutions.all %}
+              <option value="{{ solution.name }}" {% if solution.name == selected_solution %}selected{% endif %}>{{ solution.name }}</option>
+            {% endfor %}
+          {% endfor %}
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Clear Filters Button -->
+    <div class="col" style="flex: 0 0 10%;">
+      <a href="{% url request.resolver_match.view_name %}" class="btn btn-sm btn-secondary w-100">
+        Clear
+      </a>
+    </div>
+  </div>
+</form>
+  <!-- Display the filtered results in a table -->
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Service</th>
+        <th>Solution</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for category in categories %}
+        {% for service in category.services.all %}
+          {% for solution in service.solutions.all %}
+            {% if not selected_service or service.name == selected_service %}
+              {% if not selected_solution or solution.name == selected_solution %}
+                <tr>
+                  <td>{{ category.name }}</td>
+                  <td>{{ service.name }}</td>
+                  <td>{{ solution.name }}</td>
+                </tr>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- jQuery and Select2 -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+  <script>
+    // Initialize Select2 and auto-submit on change
+    document.querySelectorAll('.select2').forEach(el => {
+      $(el).select2({
+        width: '100%',
+        placeholder: 'Select an option',
+        allowClear: true
+      }).on('change', function () {
+        document.getElementById('filterForm').submit();
+      });
+    });
+  </script>
+{% endblock %}

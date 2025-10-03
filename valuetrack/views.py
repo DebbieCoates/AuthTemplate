@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Customer, Problem 
+from .models import Customer, Problem, Service, Solution, Category
 from django.contrib import messages
 from .forms import  SignUpForm,  UpdateUserForm, ChangePasswordForm, UpdateCustomer, UpdateProblem
 from django.contrib.auth import authenticate, login, logout
@@ -14,6 +14,25 @@ from django.http import HttpResponseRedirect
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
+
+
+def category_hierarchy(request):
+    selected_category = request.GET.get('category')
+    selected_service = request.GET.get('service')
+    selected_solution = request.GET.get('solution')
+
+    categories = Category.objects.prefetch_related('services__solutions')
+
+    # Optional: filter logic
+    if selected_category:
+        categories = categories.filter(name=selected_category)
+
+    return render(request, 'category_hierarchy.html', {
+        'categories': categories,
+        'selected_category': selected_category,
+        'selected_service': selected_service,
+        'selected_solution': selected_solution,
+    })
 
 ################################################# Problems
 
@@ -94,7 +113,6 @@ def problem_edit(request, pk):
         'edit_mode': True
     })
 
-
 # Delete Problem
 @login_required
 def problem_delete(request, pk):
@@ -106,8 +124,6 @@ def problem_delete(request, pk):
     if next_url:
         return HttpResponseRedirect(next_url)
     return redirect('problems')  # fallback
-
-
 
 ################################################# Customers
 
